@@ -1,0 +1,45 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from ItemServiceImplService WSDL service -->
+
+  <service name="ItemServiceImpl" provider="java:RPC" style="wrapped" use="literal">
+      <parameter name="wsdlTargetNamespace" value="http://service.api.soap.my"/>
+      <parameter name="wsdlServiceElement" value="ItemServiceImplService"/>
+      <parameter name="schemaQualified" value="http://service.api.soap.my,http://api.soap.my"/>
+      <parameter name="wsdlServicePort" value="ItemServiceImpl"/>
+      <parameter name="className" value="my.soap.api.service.ItemServiceImplSoapBindingImpl"/>
+      <parameter name="wsdlPortType" value="ItemServiceImpl"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <operation name="getItem" qname="operNS:getItem" xmlns:operNS="http://service.api.soap.my" returnQName="retNS:getItemReturn" xmlns:retNS="http://service.api.soap.my" returnType="rtns:Item" xmlns:rtns="http://api.soap.my" soapAction="" >
+        <parameter qname="pns:id" xmlns:pns="http://service.api.soap.my" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="deleteItem" qname="operNS:deleteItem" xmlns:operNS="http://service.api.soap.my" returnQName="retNS:deleteItemReturn" xmlns:retNS="http://service.api.soap.my" returnType="rtns:boolean" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <parameter qname="pns:id" xmlns:pns="http://service.api.soap.my" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="addItem" qname="operNS:addItem" xmlns:operNS="http://service.api.soap.my" returnQName="retNS:addItemReturn" xmlns:retNS="http://service.api.soap.my" returnType="rtns:boolean" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <parameter qname="pns:p" xmlns:pns="http://service.api.soap.my" type="tns:Item" xmlns:tns="http://api.soap.my"/>
+      </operation>
+      <operation name="getAllItems" qname="operNS:getAllItems" xmlns:operNS="http://service.api.soap.my" returnQName="retNS:getAllItemsReturn" xmlns:retNS="http://service.api.soap.my" returnType="rtns:Item" xmlns:rtns="http://api.soap.my" soapAction="" >
+      </operation>
+      <parameter name="allowedMethods" value="addItem deleteItem getAllItems getItem"/>
+
+      <typeMapping
+        xmlns:ns="http://api.soap.my"
+        qname="ns:Item"
+        type="java:my.soap.api.Item"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+  </service>
+</deployment>
